@@ -17,6 +17,8 @@ public:
 
 private:
     Ui::Enroll *ui;
+public slots:
+    void user_enroll();
 };
 
 #endif // ENROLL_H

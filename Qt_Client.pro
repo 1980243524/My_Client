@@ -29,17 +29,20 @@ SOURCES += \
         mainwindow.cpp \
     login.cpp \
     subthread.cpp \
-    user.cpp
+    user.cpp \
+    enroll.cpp
 
 HEADERS += \
         mainwindow.h \
     login.h \
     subthread.h \
-    user.h
+    user.h \
+    enroll.h
 
 FORMS += \
         mainwindow.ui \
-    login.ui
+    login.ui \
+    enroll.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

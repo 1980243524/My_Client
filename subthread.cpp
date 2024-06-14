@@ -3,59 +3,54 @@
 #include<QtDebug>
 #include<unistd.h>
 
-QString const SERVER_IP="192.168.186.128";
-quint16 const SERVER_PORT=9006;
+
 
 SubThread::SubThread(QObject *parent) : QObject(parent)
 {
 
 }
 
-bool SubThread::task_connect()
+QTcpSocket* SubThread::task_connect(int const window_flag)
 {
-    clientsock=new QTcpSocket;
+    QTcpSocket* clientsock=new QTcpSocket;
     clientsock->connectToHost(SERVER_IP,SERVER_PORT);
 
     //等待直到连接成功
     if(!clientsock->waitForConnected())
         {
         delete clientsock;
-        emit ERROR(CONNECTION_ERROR);
-        return false;
+        emit ERROR(window_flag,CONNECTION_ERROR);
+        return nullptr;
         }
-    return true;
+    return clientsock;
 }
 
 void SubThread::task_login(QString account,QString passwd)
 {
-
-    if(!task_connect())return;
+    error_flag=-1;
+    QTcpSocket* clientsock=task_connect(LOGIN_FLAG);
+    if(!clientsock)return;
 
     buffer=(QString::number(account.size())+'#'+account+passwd).toUtf8();
     clientsock->write(buffer);
 
-    if (!clientsock->waitForBytesWritten())
-    {
-        qDebug() << "Failed to write data to server.";
-        return ;
-    }
+    clientsock->waitForBytesWritten();
 
-    if (!clientsock->waitForReadyRead())
-    {
-        qDebug() << "Failed to read response from server.";
-        return ;
-    }
-    int x;
+    clientsock->waitForReadyRead();
 
-    clientsock->readLine((char*)&x,sizeof(x)+1);
-
+    clientsock->readLine((char*)&error_flag,sizeof(error_flag)+1);
 
     clientsock->write("ok");
 
-    emit ERROR(x);
-    if(x>0) return ;
+    emit ERROR(LOGIN_FLAG,error_flag);
+    if(error_flag>0) return ;
     emit connection_done(clientsock,account,passwd);
 
 }
 
+void SubThread::task_enroll()
+{
+    if(!task_connect(ENROLL_FLAG))return;
+
+}
 
