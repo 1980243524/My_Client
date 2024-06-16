@@ -7,10 +7,13 @@
 #include<QTcpSocket>
 QString const SERVER_IP="192.168.186.128";
 quint16 const SERVER_PORT=9006;
-int const LOGIN_FLAG=1;
-int const ENROLL_FLAG=2;
+int const LOGIN_FLAG=1;     //登录功能标志
+int const ENROLL_FLAG=2;    //注册功能标志
+
 int const CONNECTION_ERROR=0;       //连接失败错误标志
-int const ACCOUNT_ERROR=1;               //账号错误标志
+int const ACCOUNT_NOT_EXIST=1;               //账号错误标志
+int const PASSWD_ERROR=2;
+int const ACCOUNT_EXIST=3;
 class SubThread : public QObject
 {
     Q_OBJECT
@@ -25,10 +28,10 @@ public:
     int error_flag=-1;
 signals:
     void ERROR(int const widget,int const error_flag);
-    void connection_done(QTcpSocket *,QString,QString);
+    void login_done(QTcpSocket *,QString,QString);
 public slots:
     void task_login(QString,QString);
-    void task_enroll();
+    void task_enroll(QString,QString);
 };
 
 #endif // SUBTHREAD_H

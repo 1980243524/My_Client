@@ -3,6 +3,11 @@
 #include<QtDebug>
 #include<unistd.h>
 
+struct message
+{
+    int *length;
+    QByteArray data;
+};
 
 
 SubThread::SubThread(QObject *parent) : QObject(parent)
@@ -27,30 +32,65 @@ QTcpSocket* SubThread::task_connect(int const window_flag)
 
 void SubThread::task_login(QString account,QString passwd)
 {
-    error_flag=-1;
+    int *error_flag=new int(-1);
+
     QTcpSocket* clientsock=task_connect(LOGIN_FLAG);
     if(!clientsock)return;
+    clientsock->write((char*)&LOGIN_FLAG,sizeof(LOGIN_FLAG));
 
-    buffer=(QString::number(account.size())+'#'+account+passwd).toUtf8();
-    clientsock->write(buffer);
+    message m;
+    m.length=new int(0);
+
+    *m.length=account.size();
+    clientsock->write((char*)m.length,sizeof(int));
+    m.data=account.toUtf8();
+    clientsock->write(m.data);
+
+    *m.length=passwd.size();
+    clientsock->write((char*)m.length,sizeof(int));
+    m.data=passwd.toUtf8();
+    clientsock->write(m.data);
+
 
     clientsock->waitForBytesWritten();
-
     clientsock->waitForReadyRead();
+    clientsock->readLine((char *)error_flag,sizeof(error_flag));
 
-    clientsock->readLine((char*)&error_flag,sizeof(error_flag)+1);
 
-    clientsock->write("ok");
-
-    emit ERROR(LOGIN_FLAG,error_flag);
-    if(error_flag>0) return ;
-    emit connection_done(clientsock,account,passwd);
+    emit ERROR(LOGIN_FLAG,*error_flag);
+    if(*error_flag>0) return ;
+    emit login_done(clientsock,account,passwd);
 
 }
 
-void SubThread::task_enroll()
+void SubThread::task_enroll(QString account,QString passwd)
 {
-    if(!task_connect(ENROLL_FLAG))return;
+    int *error_flag=new int(-1);
 
+    QTcpSocket* clientsock=task_connect(ENROLL_FLAG);
+    if(!clientsock)return;
+    clientsock->write((char*)&ENROLL_FLAG,sizeof(ENROLL_FLAG));
+
+    message m;
+    m.length=new int(0);
+
+    *m.length=account.size();
+    clientsock->write((char*)m.length,sizeof(int));
+
+    m.data=account.toUtf8();
+    clientsock->write(m.data);
+
+    *m.length=passwd.size();
+    clientsock->write((char*)m.length,sizeof(int));
+    m.data=passwd.toUtf8();
+    clientsock->write(m.data);
+
+    clientsock->waitForBytesWritten();
+    clientsock->waitForReadyRead();
+    clientsock->readLine((char *)error_flag,sizeof(error_flag));
+
+    emit ERROR(ENROLL_FLAG,*error_flag);
+    if(*error_flag>0) return ;
+    clientsock->close();
 }
 

@@ -17,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(login_window,&login::open_mainwindow,this,&MainWindow::open_window);
     connect(login_window,&login::open_enrollwindow,this,&MainWindow::open_enrollwindow);
     connect(login_window,&login::ERROR,this,&MainWindow::show_error);
+    connect(enroll_window,&Enroll::ERROR,this,&MainWindow::show_error);
+    connect(enroll_window,&Enroll::back,this,&MainWindow::open_loginwindow);
 }
 
 
@@ -34,6 +36,10 @@ void MainWindow::open_window(User c)
 void MainWindow::open_enrollwindow()
 {
     enroll_window->show();
+}
+void MainWindow::open_loginwindow()
+{
+    login_window->show();
 }
 void MainWindow::show_error(int const widge_flag,int const error_flag)
 {
@@ -53,15 +59,17 @@ void MainWindow::show_error(int const widge_flag,int const error_flag)
 
     switch(error_flag)
     {
-    case 0:
+    case CONNECTION_ERROR:
         error->showMessage("连接不到服务器");
         break;
-    case 1:
+    case ACCOUNT_NOT_EXIST:
         error->showMessage("未知账号");
         break;
-    case 2:
+    case PASSWD_ERROR:
         error->showMessage("密码错误");
         break;
+    case ACCOUNT_EXIST:
+        error->showMessage("账号已存在");
     default:
         break;
     }

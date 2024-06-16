@@ -27,6 +27,7 @@ public slots:
     void open_window(User c);
     void open_enrollwindow();
     void show_error(int const widge_flag,int const error_flag);
+    void open_loginwindow();
 };
 
 #endif // MAINWINDOW_H

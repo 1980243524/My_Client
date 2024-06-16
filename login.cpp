@@ -1,8 +1,6 @@
 #include "login.h"
 #include "ui_login.h"
-#include <QHostAddress>
-#include<QString>
-#include<QDebug>
+
 
 
 
@@ -17,13 +15,14 @@ login::login(QWidget *parent) :
     login_thread=new QThread;
     SubThread *subt= new SubThread;
     subt->moveToThread(login_thread);
+
     connect(login_thread,&QThread::finished,subt,&SubThread::deleteLater);
     connect(ui->button_log_on,&QPushButton::clicked,this,&login::user_login);
 
     connect(this,&login::siglogin,subt,&SubThread::task_login);
 
     connect(subt,&SubThread::ERROR,this,&login::ERROR);
-    connect(subt,&SubThread::connection_done,this,&login::get_socket);
+    connect(subt,&SubThread::login_done,this,&login::get_socket);
     connect(ui->button_enroll,&QPushButton::clicked,this,&login::to_enroll);
 }
 

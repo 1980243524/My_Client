@@ -69,6 +69,19 @@
     </item>
    </layout>
   </widget>
+  <widget class="QPushButton" name="button_back_login">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>41</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>&lt;-</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

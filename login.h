@@ -7,6 +7,9 @@
 #include<QObject>
 #include"subthread.h"
 #include"user.h"
+#include <QHostAddress>
+#include<QString>
+#include<QDebug>
 
 namespace Ui {
 class login;
@@ -20,12 +23,9 @@ public:
     explicit login(QWidget *parent = nullptr);
     ~login();
 
-    QThread * login_thread;         //执行登入任务的线程
+    QThread * login_thread;         //执行登录任务的线程
 private:
     Ui::login *ui;
-
-    QString m_account;              //用户账号
-    QString m_passwd;               //用户密码
 
 public slots:
     void get_socket(QTcpSocket *,QString,QString); //获取套接字及用户信息,关闭登录界面打开新界面
