@@ -4,8 +4,7 @@
 #include <QDialog>
 #include<QObject>
 #include <QMainWindow>
-#include"subthread.h"
-
+#include"networker.h"
 namespace Ui {
 class Enroll;
 }
@@ -15,11 +14,13 @@ class Enroll : public QDialog
     Q_OBJECT
 
 public:
-    explicit Enroll(QWidget *parent = nullptr);
+    explicit Enroll(QWidget *parent = nullptr,Networker* worker=nullptr);
     ~Enroll();
     QThread * enroll_thread;         //执行注册任务的线程
+    Networker* m_worker;
 private:
     Ui::Enroll *ui;
+
 public slots:
     void user_enroll();
     void tologin();

@@ -28,6 +28,7 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     login.cpp \
+    networker.cpp \
     subthread.cpp \
     user.cpp \
     enroll.cpp
@@ -35,6 +36,7 @@ SOURCES += \
 HEADERS += \
         mainwindow.h \
     login.h \
+    networker.h \
     subthread.h \
     user.h \
     enroll.h

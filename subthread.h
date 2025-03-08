@@ -5,8 +5,8 @@
 #include<QThread>
 #include<QString>
 #include<QTcpSocket>
-QString const SERVER_IP="192.168.186.128";
-quint16 const SERVER_PORT=9006;
+QString const SERVER_IP="127.0.0.1";
+quint16 const SERVER_PORT=8080;
 int const LOGIN_FLAG=1;     //登录功能标志
 int const ENROLL_FLAG=2;    //注册功能标志
 

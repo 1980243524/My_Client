@@ -3,9 +3,13 @@
 
 #include <QMainWindow>
 #include<QTcpSocket>
-#include<login.h>
-#include<user.h>
-#include<enroll.h>
+#include<QVBoxLayout>
+#include<QInputDialog>
+#include"login.h"
+#include"user.h"
+#include"enroll.h"
+
+#include"networker.h"
 namespace Ui {
 class MainWindow;       //主窗口
 }
@@ -19,15 +23,21 @@ public:
     login* login_window ;      //登录窗口
     Enroll* enroll_window;
     ~MainWindow();
+
 private:
     Ui::MainWindow *ui;
-    User* client;
-
+    quint32 m_id;
+    Networker *m_worker;
+    QThread *m_workerThread;       // 工作线程
+    quint32 m_destinationId;
+    std::vector<std::pair<QString,quint32>>* m_friends;
 public slots:
     void open_window(User c);
-    void open_enrollwindow();
-    void show_error(int const widge_flag,int const error_flag);
-    void open_loginwindow();
+    void show_error(QString errorInfo);
+
+signals:
+    void SignalSend(quint32,quint32,QString);
+    void SignalAddFriend(QString);
 };
 
 #endif // MAINWINDOW_H
